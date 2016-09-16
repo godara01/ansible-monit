@@ -1,0 +1,29 @@
+---
+- name: Lookup OS specific variables
+  include_vars: "{{ ansible_os_family }}.yml"
+
+- name: Run OS specific tasks
+  include: "setup-{{ ansible_os_family }}.yml"
+
+- name: Create monit.config
+  template:
+    src: monit.conf.j2
+    dest: /etc/monit.conf
+    mode: 0700
+    owner: root
+    group: root
+    backup: yes
+  notify: Restart monit
+
+- name: Create monit config dir
+  file:
+    path: "{{ monit_conf_dir }}"
+    state: directory
+
+- name: Copy monit templates
+  template:
+    src: "{{ item.src }}"
+    dest: "{{ monit_conf_dir }}/{{ item.src[:-3] | basename }}"
+    mode: "0755"
+  notify: Restart monit
+  with_items: "{{ monit_template_files }}"
