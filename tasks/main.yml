@@ -19,11 +19,13 @@
   file:
     path: "{{ monit_conf_dir }}"
     state: directory
+  notify: Restart monit
 
 - name: Create monit var dir
   file:
     path: "{{ monit_var_dir }}"
     state: directory
+  notify: Restart monit
 
 - name: Copy monit templates
   template:
