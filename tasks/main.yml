@@ -20,6 +20,11 @@
     path: "{{ monit_conf_dir }}"
     state: directory
 
+- name: Create monit var dir
+  file:
+    path: "{{ monit_var_dir }}"
+    state: directory
+
 - name: Copy monit templates
   template:
     src: "{{ item.src }}"
